@@ -12,7 +12,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "doc"
   ],
   "publishConfig": {
     "access": "public",

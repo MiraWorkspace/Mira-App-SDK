@@ -1,10 +1,12 @@
 # @mira/app-sdk
 
-Mira 桌面端子应用的 TypeScript SDK，提供应用上下文、独立 SQLite、文件与目录授权、隔离视图、主题同步、模型生成和系统通知。SDK 0.2.0 对应宿主 API 1.2。
+Mira 桌面端子应用的 TypeScript 客户端 SDK。子应用通过宿主提供的消息通道调用模型、数据库、文件、原生视图、主题和通知能力，无需直接依赖 Electron 或访问宿主内部模块。
+
+当前 SDK 版本为 **0.2.0**，本文档描述 **Mira 宿主 API 1.2**。SDK 负责连接、请求响应、事件订阅及错误处理，具体能力由宿主执行并校验权限。
 
 ## 安装与使用
 
-源码独立维护于 [Mira-App-SDK](https://github.com/MiraWorkspace/Mira-App-SDK)。在 npm 首次发布前，可从 GitHub 安装：
+在 npm 首次发布前，从本仓库的版本标签安装：
 
 ```sh
 npm install github:MiraWorkspace/Mira-App-SDK#v0.2.0
@@ -31,7 +33,26 @@ sdk.dispose()
 
 将 SDK 与子应用前端一同构建。真实调用需要运行于 Mira 宿主，并在 `app-manifest.json` 中声明所需能力；单独安装 npm 包不会获得宿主权限。普通浏览器中没有 Mira 宿主时，连接会失败。
 
-完整接口、清单与权限说明见 [SDK 文档](https://github.com/MiraWorkspace/Mira-Harness/blob/main/docs/MIRA_APP_PLATFORM_SDK.md)。
+## 能力
+
+| 接口 | 用途 |
+| --- | --- |
+| `context` | 当前应用身份、宿主 API 版本、能力列表 |
+| `storage` | 应用独立 SQLite、声明式迁移、事务及内部命名空间 |
+| `files` | 应用文件读写、用户选择目录的授权与撤销 |
+| `views` | 应用自有隔离视图、布局及请求/事件通道 |
+| `appearance` | 浅色/深色主题读取与订阅 |
+| `models` | 通过宿主配置的模型生成文本 |
+| `notifications` | 发送系统通知 |
+| `workbench` | Workbench 专用浏览器及网站图标兼容接口 |
+
+## 文档
+
+- [接入指南](doc/getting-started.md)：运行条件、应用清单、权限、连接与释放。
+- [API 参考](doc/api.md)：完整公开方法、参数、返回值、示例、限制与错误处理。
+- [开发与发布](doc/development.md)：目录结构、构建测试、打包、版本及发布流程。
+
+这些说明均维护在当前仓库的 `doc/` 目录，随 SDK 包一同分发。公开类型定义见 [src/index.ts](src/index.ts)。
 
 ## 本地开发
 
@@ -45,15 +66,4 @@ npm run build
 
 `dist/` 是生成文件，不提交到 Git。`npm ci` 会自动构建；SDK 单元测试覆盖消息响应、主题事件、超时、断连及宿主握手。
 
-## 维护与发布
-
-在项目目录执行：
-
-```sh
-npm install
-npm pack --dry-run
-npm login --registry=https://registry.npmjs.org/
-npm publish
-```
-
-发布账号必须拥有 `@mira` scope 的发布权限。`npm pack` 和 `npm publish` 自动先构建 JavaScript 与类型声明；发布目标固定为 npm 官方公共仓库。已发布版本不能覆盖，更新前需调整版本号。发布成功后，子应用执行 `npm install @mira/app-sdk@新版本` 更新；现有构建不会自动升级。
+维护者的完整检查与发布步骤见 [开发与发布](doc/development.md)。
