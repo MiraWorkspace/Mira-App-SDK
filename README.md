@@ -2,23 +2,17 @@
 
 Mira 桌面端子应用的 TypeScript 客户端 SDK。子应用通过宿主提供的消息通道调用模型、数据库、文件、原生视图、主题和通知能力，无需直接依赖 Electron 或访问宿主内部模块。
 
-当前 SDK 版本为 **0.2.0**，本文档描述 **Mira 宿主 API 1.2**。SDK 负责连接、请求响应、事件订阅及错误处理，具体能力由宿主执行并校验权限。
+当前源码版本为 **0.3.0**，本文档描述 **Mira 宿主 API 1.3**。SDK 负责连接、请求响应、事件订阅及错误处理，具体能力由宿主执行并校验权限。
 
 ## 安装与使用
 
-在 npm 首次发布前，从本仓库的版本标签安装：
+通过 GitHub 固定安装 `v0.3.0`：
 
 ```sh
-npm install github:MiraWorkspace/Mira-App-SDK#v0.2.0
+npm install github:MiraWorkspace/Mira-App-SDK#v0.3.0
 ```
 
-GitHub 安装会自动构建 SDK，需要开发环境提供 Node.js、npm 和 Git。应用代码仍从 `@mira/app-sdk` 导入。
-
-发布到 npm 后，子应用可以直接安装，无需本地路径或手动复制 SDK：
-
-```sh
-npm install @mira/app-sdk@0.2.0
-```
+GitHub 安装会自动构建 SDK，需要开发环境提供 Node.js、npm 和 Git。应用代码仍从 `@mira/app-sdk` 导入。此版本通过 GitHub 标签分发，尚未发布到 npm；无需本地路径或手动复制 SDK。
 
 ```ts
 import { connectMiraApp } from '@mira/app-sdk'
@@ -42,7 +36,8 @@ sdk.dispose()
 | `files` | 应用文件读写、用户选择目录的授权与撤销 |
 | `views` | 应用自有隔离视图、布局及请求/事件通道 |
 | `appearance` | 浅色/深色主题读取与订阅 |
-| `models` | 通过宿主配置的模型生成文本 |
+| `models` | 选择供应商和模型、文本多轮/自主联网对话及单次生成 |
+| `web` | 通过宿主执行公开网页搜索，返回结构化来源 |
 | `notifications` | 发送系统通知 |
 | `workbench` | Workbench 专用浏览器及网站图标兼容接口 |
 

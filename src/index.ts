@@ -9,7 +9,18 @@ export type AppMigration = { version: number; tables?: Array<{ name: string; col
 export type Theme = 'light' | 'dark'
 export interface AppContext { appId: string; apiVersion: { major: number; minor: number }; capabilities: string[] }
 export interface ModelRequest { prompt: string; providerId?: string; modelId?: string }
-export interface ModelResult { text: string }
+export interface ModelSource { index: number; title: string; url: string }
+export interface ModelResult { text: string; sources?: ModelSource[] }
+/** Configured, available providers only. Credentials and endpoints stay in Mira. */
+export interface ModelProvider { id: string; name: string }
+export interface ChatModel { id: string; name: string }
+export interface ChatMessage { role: 'user' | 'assistant'; content: string }
+export interface ChatRequest { providerId: string; modelId: string; messages: ChatMessage[]; system?: string; webSearch?: boolean }
+export type WebSearchEngine = 'bing' | 'so360' | 'sogou' | 'baidu-html' | 'ddg' | 'ddg-lite' | 'toutiao' | 'wechat' | 'anysearch' | 'tavily' | 'firecrawl' | 'exa' | 'keenable' | 'parallel' | 'you' | 'searxng'
+export interface WebSearchRequest { query: string; limit?: number; engine?: WebSearchEngine | 'auto' }
+export interface WebSearchItem { title: string; url: string; snippet?: string }
+export interface WebSearchAttempt { engine: WebSearchEngine; status: 'ok' | 'empty' | 'timeout' | 'blocked' | 'unavailable' | 'invalid' | 'network' | 'cooldown'; durationMs: number }
+export interface WebSearchResult { query: string; engine: WebSearchEngine; results: WebSearchItem[]; attempts: WebSearchAttempt[] }
 export interface NotificationRequest { title: string; body?: string }
 export type WorkbenchBrowserRequest =
   | { type: 'open'; tabId: string; url: string }
@@ -100,7 +111,13 @@ export class MiraAppSdk {
       return () => { this.themeListeners.delete(listener) }
     },
   }
-  readonly models = { generate: (request: ModelRequest) => this.request<ModelResult>('models.generate', request, Math.max(this.timeoutMs, 75000)) }
+  readonly models = {
+    listProviders: () => this.request<ModelProvider[]>('models.listProviders'),
+    listModels: (providerId: string) => this.request<ChatModel[]>('models.listModels', { providerId }),
+    chat: (request: ChatRequest) => this.request<ModelResult>('models.chat', request, Math.max(this.timeoutMs, 75000)),
+    generate: (request: ModelRequest) => this.request<ModelResult>('models.generate', request, Math.max(this.timeoutMs, 75000)),
+  }
+  readonly web = { search: (request: WebSearchRequest) => this.request<WebSearchResult>('web.search', request, Math.max(this.timeoutMs, 35000)) }
   readonly notifications = { send: (request: NotificationRequest) => this.request<void>('notifications.send', request) }
   readonly workbench = {
     browser: (request: WorkbenchBrowserRequest) => this.request<void>('workbench.browser', request),

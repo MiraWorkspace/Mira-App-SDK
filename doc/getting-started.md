@@ -1,6 +1,6 @@
 # 接入指南
 
-本文对应 SDK 0.2.0 与 Mira 宿主 API 1.2。接口细节见 [API 参考](api.md)，维护步骤见 [开发与发布](development.md)。
+本文对应 SDK 0.3.0与 Mira 宿主 API 1.3。接口细节见 [API 参考](api.md)，维护步骤见 [开发与发布](development.md)。
 
 ## 运行条件
 
@@ -12,10 +12,10 @@ SDK 是 ESM 包，提供 JavaScript 和 TypeScript 类型声明。将其与子�
 
 ## 安装
 
-当前可从 GitHub 的版本标签安装：
+SDK 0.3.0 通过 GitHub 标签分发，尚未发布到 npm。固定安装该版本：
 
 ```sh
-npm install github:MiraWorkspace/Mira-App-SDK#v0.2.0
+npm install github:MiraWorkspace/Mira-App-SDK#v0.3.0
 ```
 
 GitHub 安装通过 `prepare` 自动构建，需要 Node.js、npm、Git，并能下载构建依赖。不要关闭安装脚本，否则包中可能缺少生成的 `dist/`。
@@ -26,7 +26,7 @@ GitHub 安装通过 `prepare` 自动构建，需要 Node.js、npm、Git，并能
 import { connectMiraApp } from '@mira/app-sdk'
 ```
 
-完成 npm 发布后，可改为 `npm install @mira/app-sdk@0.2.0`。更新依赖后需要重新构建、分发子应用，已生成的应用包不会自动切换 SDK 版本。
+完成 npm 发布后，可改为 `npm install @mira/app-sdk@0.3.0`。更新依赖后需要重新构建、分发子应用，已生成的应用包不会自动切换 SDK 版本。
 
 ## 应用清单
 
@@ -41,7 +41,7 @@ import { connectMiraApp } from '@mira/app-sdk'
   "entry": "index.html",
   "runtime": "platform",
   "minShellVersion": "0.1.0-beta.1",
-  "platformApi": { "major": 1, "minor": 2 },
+  "platformApi": { "major": 1, "minor": 3 },
   "requiredCapabilities": ["storage:app", "appearance:read"]
 }
 ```
@@ -54,7 +54,7 @@ import { connectMiraApp } from '@mira/app-sdk'
 | `entry` | 包内相对网页路径，不能指向外部网址或越出包目录 |
 | `runtime` | 显式声明 `platform` 使用隔离应用运行时，要求 API 至少为 1.1 |
 | `minShellVersion` | 应用实际验证过的最低 Mira 版本；示例值需要按发布情况调整 |
-| `platformApi` | 应用要求的宿主 API 版本，本文示例使用 1.2 |
+| `platformApi` | 应用要求的宿主 API 版本，本文示例使用 1.3 |
 | `requiredCapabilities` | 本应用使用的宿主能力列表 |
 
 可选 `description` 和包内相对路径 `icon` 用于显示说明与图标。宿主检查清单、版本兼容和安装身份。子应用通过调试目录扫描或“发现”安装；SDK 不提供子应用安装接口，也不能通过参数切换应用身份。
@@ -66,7 +66,8 @@ import { connectMiraApp } from '@mira/app-sdk'
 | 无额外能力 | `context.get()` |
 | `storage:app` | `storage.migrate()`、`storage.transaction()` |
 | `appearance:read` | `appearance.get()` 与主题变化事件 |
-| `models:generate` | `models.generate()` |
+| `models:generate` | `models.listProviders/listModels/chat/generate()` |
+| `web:search` | `web.search()`、允许 `models.chat({ webSearch: true })` 使用内置搜索和网页读取（API 1.3，同时需模型权限） |
 | `notifications:send` | `notifications.send()` |
 | `files:app` | `files` 下的全部方法 |
 | `views:create` | `views.control()` 与视图消息 |
