@@ -122,6 +122,7 @@ export class MiraAppSdk {
   readonly workbench = {
     browser: (request: WorkbenchBrowserRequest) => this.request<void>('workbench.browser', request),
     fetchSiteIcon: (url: string) => this.request<string | null>('workbench.fetchSiteIcon', { url }),
+    fetchMiniappResource: (url: string, kind: 'manifest' | 'package') => this.request<Uint8Array>('workbench.fetchMiniappResource', { url, kind }, Math.max(this.timeoutMs, 65000)),
   }
   readonly files = {
     directories: () => this.request<DirectoryGrant[]>('files.directories'),

@@ -8,6 +8,15 @@ function setup(timeout = 1000) {
 }
 
 describe('Mira app SDK', () => {
+  it('downloads miniapp resources through the Workbench-only transport and preserves binary data', async () => {
+    const { sdk, host } = setup()
+    host.once('message', message => {
+      expect(message).toMatchObject({ method: 'workbench.fetchMiniappResource', params: { url: 'https://example.com/manifest.json', kind: 'manifest' } })
+      host.postMessage({ type: 'mira:response', id: message.id, ok: true, value: new Uint8Array([0, 128, 255]) })
+    })
+    try { expect(await sdk.workbench.fetchMiniappResource('https://example.com/manifest.json', 'manifest')).toEqual(new Uint8Array([0, 128, 255])) }
+    finally { sdk.dispose(); host.close() }
+  })
   it('sends a web search request and returns structured sources without interpreting page content', async () => {
     const { sdk, host } = setup()
     const request = { query: 'TypeScript 官方文档', limit: 3, engine: 'bing' as const }

@@ -1,6 +1,6 @@
 # API 参考
 
-对应 SDK 0.3.0与 Mira 宿主 API 1.3。本文同时说明客户端方法和当前宿主限制；主进程服务不会因安装 SDK 而在普通网页中出现。应用清单与连接步骤见 [接入指南](getting-started.md)。
+对应 SDK 0.4.0 与 Mira 宿主 API 1.4。本文同时说明客户端方法和当前宿主限制；主进程服务不会因安装 SDK 而在普通网页中出现。应用清单与连接步骤见 [接入指南](getting-started.md)。
 
 ## 连接与生命周期
 
@@ -32,7 +32,7 @@ interface AppContext {
 }
 ```
 
-当前源码中的 Mira 宿主返回 API 1.3。该方法不接受应用 ID，不返回模型凭据、宿主路由或用户完整配置。
+当前源码中的 Mira 宿主返回 API 1.4。该方法不接受应用 ID，不返回模型凭据、宿主路由或用户完整配置。
 
 ## 数据库存储
 
@@ -341,3 +341,16 @@ SDK 0.2.0 不包含 `workbench.apps/install/review/uninstall/revoke/app`。小�
 | `APPLICATION_DENIED` | 所属应用拒绝自有子视图请求或该请求超时 |
 
 SDK 保留宿主返回的其他错误码；不同宿主可能返回额外代码。当前 Mira 连接最多同时处理 32 个请求。缺少权限时不能靠重复调用取得权限；模型和文件等操作失败应向用户提供明确结果。涉及写入时，超时后先检查实际状态再决定重试。
+
+
+### Workbench 小程序安装资源下载
+
+SDK 0.4.0 / Mira API 1.4 新增：
+
+```ts
+sdk.workbench.fetchMiniappResource(url: string, kind: 'manifest' | 'package'): Promise<Uint8Array>
+```
+
+仅向拥有 `workbench:manage` 的 `mira-workbench` / `mira-workbench-test` 开放，不向小程序或其他子应用开放。Mira 只提供受限网络传输；发布清单解析、同源校验、包内信息对比、SHA-256、权限确认和安装由 Workbench 负责。
+
+地址必须为 HTTPS，不含账号密码和片段，拒绝本机及已识别的内网地址。GET 不携带 Cookie，不跟随重定向；发布清单上限 64 KiB、15 秒，安装包上限 64 MiB、60 秒，按实际读取字节限制大小。SDK 至少等待 65 秒，完成下载后宿主再次检查当前授权。网络失败、超时、重定向或大小超限均返回错误，不返回部分文件。

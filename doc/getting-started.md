@@ -1,6 +1,6 @@
 # 接入指南
 
-本文对应 SDK 0.3.0与 Mira 宿主 API 1.3。接口细节见 [API 参考](api.md)，维护步骤见 [开发与发布](development.md)。
+本文对应 SDK 0.4.0 与 Mira 宿主 API 1.4。接口细节见 [API 参考](api.md)，维护步骤见 [开发与发布](development.md)。
 
 ## 运行条件
 
@@ -12,10 +12,10 @@ SDK 是 ESM 包，提供 JavaScript 和 TypeScript 类型声明。将其与子�
 
 ## 安装
 
-SDK 0.3.0 通过 GitHub 标签分发，尚未发布到 npm。固定安装该版本：
+SDK 0.4.0 通过 GitHub 标签分发，尚未发布到 npm。固定安装该版本：
 
 ```sh
-npm install github:MiraWorkspace/Mira-App-SDK#v0.3.0
+npm install github:MiraWorkspace/Mira-App-SDK#v0.4.0
 ```
 
 GitHub 安装通过 `prepare` 自动构建，需要 Node.js、npm、Git，并能下载构建依赖。不要关闭安装脚本，否则包中可能缺少生成的 `dist/`。
@@ -26,7 +26,7 @@ GitHub 安装通过 `prepare` 自动构建，需要 Node.js、npm、Git，并能
 import { connectMiraApp } from '@mira/app-sdk'
 ```
 
-完成 npm 发布后，可改为 `npm install @mira/app-sdk@0.3.0`。更新依赖后需要重新构建、分发子应用，已生成的应用包不会自动切换 SDK 版本。
+完成 npm 发布后，可改为 `npm install @mira/app-sdk@0.4.0`。更新依赖后需要重新构建、分发子应用，已生成的应用包不会自动切换 SDK 版本。
 
 ## 应用清单
 
@@ -111,3 +111,5 @@ window.addEventListener('pagehide', dispose, { once: true })
 先确认 `context.get()` 的应用身份和 API 版本，再逐项验证清单中使用的能力：数据重启后可读、目录只读限制有效、主题跟随、断连可处理、隔离视图关闭后能清理状态。模型与通知还需要真实供应商配置及操作系统环境。
 
 本 SDK 仓库的单元测试验证客户端消息与握手行为。它们不启动真实宿主，不等同于模型、文件权限、系统通知或 macOS/Windows 安装版验收。
+
+网址安装下载接口需要 SDK 0.4.0 与 Mira API 1.4，限 Workbench 使用；已有模型与联网能力的最低要求仍为 API 1.3。

@@ -2,14 +2,14 @@
 
 Mira 桌面端子应用的 TypeScript 客户端 SDK。子应用通过宿主提供的消息通道调用模型、数据库、文件、原生视图、主题和通知能力，无需直接依赖 Electron 或访问宿主内部模块。
 
-当前源码版本为 **0.3.0**，本文档描述 **Mira 宿主 API 1.3**。SDK 负责连接、请求响应、事件订阅及错误处理，具体能力由宿主执行并校验权限。
+当前源码版本为 **0.4.0**，本文档描述 **Mira 宿主 API 1.4**。SDK 负责连接、请求响应、事件订阅及错误处理，具体能力由宿主执行并校验权限。
 
 ## 安装与使用
 
-通过 GitHub 固定安装 `v0.3.0`：
+通过 GitHub 固定安装 `v0.4.0`：
 
 ```sh
-npm install github:MiraWorkspace/Mira-App-SDK#v0.3.0
+npm install github:MiraWorkspace/Mira-App-SDK#v0.4.0
 ```
 
 GitHub 安装会自动构建 SDK，需要开发环境提供 Node.js、npm 和 Git。应用代码仍从 `@mira/app-sdk` 导入。此版本通过 GitHub 标签分发，尚未发布到 npm；无需本地路径或手动复制 SDK。
@@ -39,7 +39,7 @@ sdk.dispose()
 | `models` | 选择供应商和模型、文本多轮/自主联网对话及单次生成 |
 | `web` | 通过宿主执行公开网页搜索，返回结构化来源 |
 | `notifications` | 发送系统通知 |
-| `workbench` | Workbench 专用浏览器及网站图标兼容接口 |
+| `workbench` | Workbench 专用浏览器、网站图标和小程序安装资源下载接口 |
 
 ## 文档
 
